@@ -3,8 +3,6 @@ package hr.yin;
 public class Main {
 
     public static void main(String[] args) {
-        int[][] matrix = {{1,4,7,11,15},{2,5,8,12,19},{3,6,9,16,22},{10,13,14,17,24},{18,21,23,26,30}};
-        new Main().findNumberIn2DArray(matrix, 20);
     }
 
     /**
@@ -35,7 +33,7 @@ public class Main {
     }
 
     /**
-     * 排序二维数组中查找数字
+     * 排序二维数组中查找
      * 左上角为最小值，右下角为最大值
      */
     public boolean findNumberIn2DArray(int[][] matrix, int target) {
