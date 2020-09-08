@@ -57,4 +57,31 @@ public class Main {
         return false;
     }
 
+    /**
+     * 替换空格
+     * 1.String#replaceAll() 性能不好
+     * 2.StringBuilder拼接   本质是：char[]+扩容（System.arraycopy()）
+     * 3.定义静态数组：大小刚好（遍历两次字符串，损失时间）、大小为字符串3倍（损失空间）
+     *
+     * @param s
+     * @return
+     */
+    public String replaceSpace(String s) {
+        if (s == null) {
+            return null;
+        }
+
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) == ' ') {
+                sb.append("%20");
+            } else {
+                sb.append(s.charAt(i));
+            }
+        }
+
+        return sb.toString();
+    }
+
 }
