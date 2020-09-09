@@ -60,9 +60,6 @@ public class Main {
      * 1.String#replaceAll() 性能不好
      * 2.StringBuilder拼接   本质是：char[]+扩容（System.arraycopy()）
      * 3.定义静态数组：大小刚好（遍历两次字符串，损失时间）、大小为字符串3倍（损失空间）
-     *
-     * @param s
-     * @return
      */
     public String replaceSpace(String s) {
         if (s == null) {
@@ -80,6 +77,37 @@ public class Main {
         }
 
         return sb.toString();
+    }
+
+    public static class ListNode {
+        int val;
+        ListNode next;
+
+        ListNode(int x) {
+            val = x;
+        }
+    }
+    /**
+     * 从尾到头打印单链表
+     * 必须从头到尾遍历链表
+     * 1.可用栈(Stack extends Vector)存储遍历的每个值（多用一个栈的空间）
+     * 2.访问一次链表记录节点数、再次访问链表存储节点值（多了遍历一次的时间）
+     */
+    public int[] reversePrint(ListNode head) {
+        ListNode p = head;
+        int count = 0;
+        while (p != null) {
+            count++;
+            p = p.next;
+        }
+
+        int[] result = new int[count];
+        while (head != null) {
+            result[--count] = head.val;
+            head = head.next;
+        }
+
+        return result;
     }
 
 }
