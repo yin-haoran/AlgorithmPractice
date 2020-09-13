@@ -218,4 +218,27 @@ public class Main {
         return secondNumber;
     }
 
+    /**
+     * 青蛙跳台阶
+     * f(n) = f(n-1) + f(n-2)
+     * f(0) = 1   f(1) = 1   f(2) = 2   f(3) = 3
+     */
+    public int numWays(int n) {
+        if (n == 0 || n == 1) {
+            return 1;
+        }
+
+        int firstNum = 1;
+        int secondNum = 1;
+        int tmp;
+        while (n >= 2) {
+            tmp = (firstNum + secondNum) % 1000000007;
+            firstNum = secondNum;
+            secondNum = tmp;
+            --n;
+        }
+
+        return secondNum;
+    }
+
 }
