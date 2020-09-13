@@ -197,4 +197,25 @@ public class Main {
 
     }
 
+    /**
+     * 斐波那契数列
+     * 0 1 1 2 3 5 ...
+     */
+    public int fib(int n) {
+        if (n == 0 || n == 1) {
+            return n;
+        }
+
+        int firstNumber = 0;
+        int secondNumber = 1;
+        int tmp;
+        while (n >= 2) {
+            tmp = (firstNumber + secondNumber) % 1000000007;
+            firstNumber = secondNumber;
+            secondNumber = tmp;
+            --n;
+        }
+        return secondNumber;
+    }
+
 }
