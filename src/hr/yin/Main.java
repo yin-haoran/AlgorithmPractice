@@ -1,5 +1,8 @@
 package hr.yin;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Main {
 
     public static void main(String[] args) {
@@ -41,7 +44,7 @@ public class Main {
         int row = 0;
         int column = matrix[0].length - 1;
 
-        while(row < matrix.length && column >= 0) {
+        while (row < matrix.length && column >= 0) {
             if (matrix[row][column] == target) {
                 return true;
             } else if (target > matrix[row][column]) {
@@ -87,6 +90,7 @@ public class Main {
             val = x;
         }
     }
+
     /**
      * 从尾到头打印单链表
      * 必须从头到尾遍历链表
@@ -108,6 +112,53 @@ public class Main {
         }
 
         return result;
+    }
+
+    public static class TreeNode {
+        int val;
+        TreeNode left;
+        TreeNode right;
+
+        TreeNode(int x) {
+            val = x;
+        }
+    }
+
+    /**
+     * 前序和中序重建二叉树。不含重复值
+     * 1.直接在中序遍历中查找头结点位置
+     * 2.HashMap存储中序遍历值及其下标（提高了查找速度，但增加了空间的使用
+     */
+    public TreeNode buildTree(int[] preorder, int[] inorder) {
+        if (preorder == null || preorder.length == 0 || inorder == null || inorder.length == 0) {
+            return null;
+        }
+
+        // HashMap存储中序遍历元素及其下标，方便查找
+        Map<Integer, Integer> inMap = new HashMap<>();
+        for (int i = 0; i < inorder.length; i++) {
+            inMap.put(inorder[i], i);
+        }
+
+        return buildTree(preorder, 0, preorder.length - 1, inorder, 0, inorder.length - 1, inMap);
+    }
+
+    private TreeNode buildTree(int[] preorder, int preStart, int preEnd, int[] inorder, int inStart, int inEnd, Map<Integer, Integer> inMap) {
+        // 边界
+        if (preStart > preEnd || inStart > inEnd) {
+            return null;
+        }
+
+        // 当前确定的头结点
+        TreeNode head = new TreeNode(preorder[preStart]);
+
+        // 头结点在中序的下标
+        int headPosInOrder = inMap.get(head.val);
+        // 左孩子节点数
+        int leftChildNum = headPosInOrder - inStart;
+        head.left = buildTree(preorder, preStart + 1, preStart + leftChildNum, inorder, inStart, headPosInOrder - 1, inMap);
+        head.right = buildTree(preorder, preStart + leftChildNum + 1, preEnd, inorder, headPosInOrder + 1, inEnd, inMap);
+        return head;
     }
 
 }
