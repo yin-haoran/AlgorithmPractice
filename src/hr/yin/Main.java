@@ -1,7 +1,9 @@
 package hr.yin;
 
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Stack;
 
 public class Main {
 
@@ -159,6 +161,40 @@ public class Main {
         head.left = buildTree(preorder, preStart + 1, preStart + leftChildNum, inorder, inStart, headPosInOrder - 1, inMap);
         head.right = buildTree(preorder, preStart + leftChildNum + 1, preEnd, inorder, headPosInOrder + 1, inEnd, inMap);
         return head;
+    }
+
+    /**
+     * 两个栈实现队列
+     */
+    class CQueue {
+
+        private final Stack<Integer> inputStack;
+        private final Stack<Integer> outputStack;
+
+        public CQueue() {
+            inputStack = new Stack<>();
+            outputStack = new Stack<>();
+        }
+
+        public void appendTail(int value) {
+            inputStack.push(value);
+        }
+
+        public int deleteHead() {
+            if (!outputStack.isEmpty()) {
+                return outputStack.pop();
+            }
+
+            if (inputStack.isEmpty()) {
+                return -1;
+            } else {
+                while (!inputStack.isEmpty()) {
+                    outputStack.push(inputStack.pop());
+                }
+                return outputStack.pop();
+            }
+        }
+
     }
 
 }
