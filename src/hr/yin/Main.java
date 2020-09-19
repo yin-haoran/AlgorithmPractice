@@ -1,9 +1,6 @@
 package hr.yin;
 
-import java.util.Deque;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Stack;
+import java.util.*;
 
 public class Main {
 
@@ -268,7 +265,7 @@ public class Main {
         int right = numbers.length - 1;
         int mid;
         while (left < right) {
-            mid = (left + right) / 2;
+            mid = (left + right) / 2; // mid = left + (right - left) / 2;
             if (numbers[mid] > numbers[right]) {
                 left = mid + 1;
             } else if (numbers[mid] < numbers[right]) {
@@ -303,5 +300,57 @@ public class Main {
         }
         return numbers[left] > numbers[right] ? numbers[right] : numbers[left];
     }*/
+
+    /**
+     * 矩阵中的路径
+     *
+     * DFS 回溯 递归
+     */
+    public boolean exist(char[][] board, String word) {
+        if (board == null || board.length == 0 || board[0] == null || board[0].length == 0) {
+            return false;
+        }
+        if (word == null || word.length() == 0) {
+            return false;
+        }
+
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[i].length; j++) {
+                if (checkDFS(board, i, j, word, 0)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+    /**
+     * @param board 矩阵
+     * @param i 当前行
+     * @param j 当前列
+     * @param word 路径
+     * @param index 当前要比较字符的下标
+     */
+    private boolean checkDFS(char[][] board, int i, int j, String word, int index) {
+        if (index == word.length()) {
+            return true;
+        }
+
+        if (i < 0 || i >= board.length ||
+            j < 0 || j >= board[0].length ||
+            board[i][j] != word.charAt(index)) {
+            return false;
+        }
+
+        board[i][j] = '\0';
+        boolean result =
+            checkDFS(board, i + 1, j, word, index + 1) ||
+            checkDFS(board, i - 1, j, word, index + 1) ||
+            checkDFS(board, i, j + 1, word, index + 1) ||
+            checkDFS(board, i, j - 1, word, index + 1);
+        board[i][j] = word.charAt(index);
+
+        return result;
+    }
 
 }
