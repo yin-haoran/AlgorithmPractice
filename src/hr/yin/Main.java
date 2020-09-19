@@ -241,4 +241,67 @@ public class Main {
         return secondNum;
     }
 
+    /*
+        二分查找：
+            左、中、右。（以中间值作为基准,进行大、小、相等的比较）
+            每次查找会排除掉一些元素，且数组元素特性保持不变
+            注意分析数组元素个数为1、2的情况
+     */
+    /**
+     * 旋转数组的最小值
+     *
+     * 数组情况：没旋转---递增序列(最小值在左边)    旋转了---最小值靠左边、最小值靠右边
+     * 特殊值：第一个元素、最后个元素
+     *
+     * 中间值和边界值相等->不能判断最小值在左边或右边->直接忽略边界值
+     *
+     * 不能分类的情况，可以用特殊条件来过滤。
+     * 以第一个元素作为待比较值，当numbers[mid] > numbers[left]时：1.没旋转，最小值在左边，为第一个元素。2.旋转了，最小值在右边
+     * 此时可以判断：如果numbers[left] < number[right]，那么为1，直接返回最小值numbers[left]
+     */
+    public int minArray(int[] numbers) {
+        if (numbers == null || numbers.length == 0) {
+            return -1;
+        }
+
+        int left = 0;
+        int right = numbers.length - 1;
+        int mid;
+        while (left < right) {
+            mid = (left + right) / 2;
+            if (numbers[mid] > numbers[right]) {
+                left = mid + 1;
+            } else if (numbers[mid] < numbers[right]) {
+                right = mid;
+            } else {
+                right = right - 1;
+            }
+        }
+
+        return numbers[left];
+    }
+    /*public int minArray(int[] numbers) {
+        if (numbers == null || numbers.length == 0) {
+            return -1;
+        }
+
+        int left = 0;
+        int right = numbers.length - 1;
+        int mid;
+        while (right - left > 1) {
+            mid = (left + right) / 2;
+            if (numbers[mid] > numbers[left]) {
+                if(numbers[left] < numbers[right]) {
+                    return numbers[left];
+                }
+                left = mid + 1;
+            } else if (numbers[mid] < numbers[left]) {
+                right = mid;
+            } else {
+                left =left + 1;
+            }
+        }
+        return numbers[left] > numbers[right] ? numbers[right] : numbers[left];
+    }*/
+
 }
