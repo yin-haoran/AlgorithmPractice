@@ -353,4 +353,50 @@ public class Main {
         return result;
     }
 
+    /**
+     * 机器人的运动范围
+     *
+     * DFS 递归
+     * BFS 队列
+     */
+    public int movingCount(int m, int n, int k) {
+        if (m <= 0 || n <= 0 || k < 0) {
+            return 0;
+        }
+
+        boolean[][] visited = new boolean[m][n];
+        return movingDFS(0, 0, k, visited);
+    }
+    /**
+     *
+     * @param i 当前行号
+     * @param j 当前列号
+     * @param k 下标数位之和的限制
+     * @param visited 标记被访问过的位置
+     * @return 当前位置继续移动，总共可以移动的位置数量
+     */
+    private int movingDFS(int i, int j, int k, boolean[][] visited) {
+        if (i >= visited.length || i < 0 ||
+            j >= visited[0].length || j < 0 ||
+            visited[i][j] || getNumSum(i) + getNumSum(j) > k) {
+            return 0;
+        }
+
+        visited[i][j] = true;
+        return 1 +
+            movingDFS(i + 1, j, k, visited) +
+            movingDFS(i, j + 1, k, visited);
+    }
+    /** 获取一个数的数位之和 */
+    private int getNumSum(int num) {
+        int sum = 0;
+
+        while (num != 0) {
+            sum += num % 10;
+            num /= 10;
+        }
+
+        return sum;
+    }
+
 }
