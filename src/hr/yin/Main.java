@@ -399,4 +399,63 @@ public class Main {
         return sum;
     }
 
+    /**
+     * 剪绳子
+     *
+     * 1.动态规划
+     * 2.数学知识：算术几何均值不等值->求导取极大值->e为驻点。
+     *           <p>最优：3   次优：2   特殊：3*1<2*2</p>
+     */
+    public int cuttingRope(int n) {
+        if (n < 2) {
+            return 0;
+        }
+
+        // 长度为下标的绳子剪了的乘积和原本长度的最大值
+        int[] max = new int[n];
+        max[1] = 1;
+
+        // 长度为n-1的绳子所能取到的剪了的乘积和原本长度的最大值
+        for (int i = 2; i <= n - 1; i++) {
+            max[i] = i;
+            // 对折一半
+            for (int j = 1; j <= i / 2; j++) {
+                max[i] = Math.max(max[i], max[j] * max[i - j]);
+            }
+        }
+
+        // 长度为n的绳子，剪了的乘积的最大值
+        int result = max[1] * max[n - 1];
+        for (int i = 2; i <= n - 1; i++) {
+            result = Math.max(result, max[i] * max[n - i]);
+        }
+
+        return result;
+    }
+    /*public int cuttingRope(int n) {
+        if (n < 2) {
+            return 0;
+        }
+        if (n == 2) {
+            return 1;
+        }
+        if (n == 3) {
+            return 2;
+        }
+
+        // n >= 4
+        int amountOf3 = n / 3;
+        int remainder = n % 3;
+        int result = (int) Math.pow(3, amountOf3);
+        if (remainder == 2) {
+            result *= 2;
+        }
+        if (remainder == 1) {
+            result = result / 3 * 4;
+        }
+        // 余数为0，不用再做再做操作
+
+        return result;
+    }*/
+
 }
