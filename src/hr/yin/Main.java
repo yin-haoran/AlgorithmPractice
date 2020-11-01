@@ -458,4 +458,57 @@ public class Main {
         return result;
     }*/
 
+    /**
+     * 剪绳子 - 大数问题
+     *
+     * 大数问题：注意int最大值为2开头10的9次方，两个int相乘不会超过long，多用long
+     *
+     * 快速幂：a^b = (a^2)^(b/2)   or   a*(a^2)^(b/2)
+     *
+     * (a * b) % p = (a % p * b % p) % p
+     */
+    public int cuttingRope2(int n) {
+        if (n < 2) {
+            return 0;
+        }
+        if (n == 2) {
+            return 1;
+        }
+        if (n == 3) {
+            return 2;
+        }
+
+        // 3的个数
+        int amountOf3 = n / 3;
+        // 除3后的余数
+        int remainder = n % 3;
+
+        int modNumber = 1000000007;
+
+        // 快速幂
+        long base = 3;
+        int power = amountOf3 - 1;
+        long result = 1;
+        // power等于1，result乘最后的base。power等于0，结束循环
+        while(power > 0) {
+            if ((power & 1) == 1) {
+                result = result * base % modNumber;
+            }
+            base = base * base % modNumber;
+            power >>>= 1;
+        }
+
+        if (remainder == 2) {
+            result = result * 2 * 3 % modNumber;
+        }
+        if (remainder == 1) {
+            result = result * 4 % modNumber;
+        }
+        if (remainder == 0) {
+            result = result * 3 % modNumber;
+        }
+
+        return (int) result;
+    }
+
 }
