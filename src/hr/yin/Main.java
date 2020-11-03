@@ -526,4 +526,44 @@ public class Main {
         return count;
     }
 
+    /**
+     * 数值的整数次方。忽略大数问题。
+     *
+     * 1.边界问题
+     * 2.快速幂
+     * 3.注意：最小值的相反数/绝对值会超过最大值.
+     * {@link Integer#MIN_VALUE}、{@link Integer#MAX_VALUE}.
+     * -Integer.MIN_VALUE 等于 Math.abs(Integer.MIN_VALUE) 等于 Integer.MIN_VALUE
+     */
+    public double power(double base, int exponent) throws ArithmeticException {
+        if (base == 0 && exponent < 0) {
+            throw new ArithmeticException("除0操作");
+        }
+
+        // 避免出现int的最小值取绝对值导致的数值溢出问题
+        double result = fastPower(base, Math.abs((long) exponent));
+
+        if (exponent < 0) {
+            result = 1/ result;
+        }
+
+        return result;
+    }
+    /**
+     * 快速幂。指数为非负整数
+     */
+    private double fastPower(double base, long exponent) {
+        double result = 1;
+
+        while (exponent > 0) {
+            if ((exponent & 1) == 1) {
+                result *= base;
+            }
+            base *= base;
+            exponent >>= 1;
+        }
+
+        return result;
+    }
+
 }
