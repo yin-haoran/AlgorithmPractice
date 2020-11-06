@@ -142,7 +142,9 @@ public class Main {
         return buildTree(preorder, 0, preorder.length - 1, inorder, 0, inorder.length - 1, inMap);
     }
 
-    private TreeNode buildTree(int[] preorder, int preStart, int preEnd, int[] inorder, int inStart, int inEnd, Map<Integer, Integer> inMap) {
+    private TreeNode buildTree(int[] preorder, int preStart, int preEnd,
+                               int[] inorder, int inStart, int inEnd,
+                               Map<Integer, Integer> inMap) {
         // 边界
         if (preStart > preEnd || inStart > inEnd) {
             return null;
@@ -564,6 +566,43 @@ public class Main {
         }
 
         return result;
+    }
+
+    /**
+     * 打印1到最大的n位数
+     *
+     * 1.用int long：有类型存在最大的限制
+     * 2.全排列：dfs
+     * 3.String模拟加法、BigInteger
+     *
+     * 注：时间复杂度一样
+     */
+    public void printNumbers(int n) {
+        dfs(new StringBuilder(), n);
+    }
+    /**
+     * 全排列 dfs
+     * @param number 当前已确定位置的数。如第n位 第n-1位
+     * @param position 待确定的位置。如第n-2位
+     */
+    private void dfs(StringBuilder number, int position) {
+        // 待确定的位置为0，说明整个数拼接完成
+        if (position == 0) {
+            if (number.length() != 0) {
+                System.out.print(number.toString() + " ");
+            }
+            return;
+        }
+
+        for (int i = 0; i <= 9; i++) {
+            if (number.length() == 0 && i == 0) {
+                dfs(number, position - 1);
+            } else {
+                number.append(i);
+                dfs(number, position - 1);
+                number.deleteCharAt(number.length() - 1);
+            }
+        }
     }
 
 }
