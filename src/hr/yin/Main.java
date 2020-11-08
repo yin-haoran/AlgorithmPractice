@@ -605,4 +605,32 @@ public class Main {
         }
     }
 
+    /**
+     * 删除单链表节点。参数：head节点、待删除值
+     *
+     * 对于类似的问题需要考虑的特殊情况：0节点、1节点、head节点、tail节点
+     *
+     * 扩展：在O(1)时间删除单链表存在的节点。参数：head节点、待删除节点
+     * 解法：待删除节点的后继内容复制到待删除节点，删除后继。注意尾结点和只有一个节点
+     */
+    public ListNode deleteNode(ListNode head, int val) {
+        // 定义head节点的前驱，统一删除操作
+        ListNode preHead = new ListNode(0);
+        preHead.next = head;
+
+        // 遍历单链表的引用
+        ListNode p = preHead;
+        // 遍历单链表
+        while (p.next != null && p.next.val != val) {
+            p = p.next;
+        }
+
+        // 找到了待删除的节点，删除
+        if (p.next != null) {
+            p.next = p.next.next;
+        }
+
+        return preHead.next;
+    }
+
 }
