@@ -633,4 +633,121 @@ public class Main {
         return preHead.next;
     }
 
+    /**
+     * 正则表达式匹配。'*'、'.'和a-z
+     *
+     * 1.dp。
+     *  前面的已确定，确定当前
+     *    广义相同(相同/regex为'.')   取决于dp[i - 1][j - 1]
+     *    广义不同(与上相反)   1.regex当前为'*'：1.1regex前一个值等于str当前值：取决于dp[i - 1][j] || dp[i][j - 2]; 1.2不等：false
+     *                      2.regex当前不为‘*’：false
+     *
+     * 2.dfs。
+     * 前面的已匹配，比较当前
+     *  广义相同(相同/regex为'.')   1.regex下一个为'*'：reg移动两步/str移动一步  2.regex下一个不为'*'：均移动一步
+     *  广义不同(与上相反)   1.regex下一个为"*"：regex移动两步   2.regex下一个不为"*"：返回false
+     *  注意：有相同子问题就记录已知结果。结束比较是regex不为空的特殊情况。
+     */
+    // dfs
+    public boolean isMatchDFS(String str, String regex) {
+        if (str == null || regex == null) {
+            return false;
+        }
+
+        // 记录已经确定的不匹配子序列。noMatch[i][j]为true代表str的i及i以后的子序列和regex的j及j以后的子序列不匹配，为false才需要dfs。
+        boolean[][] noMatch = new boolean[str.length() + 1][regex.length() + 1];
+
+        return dfs(str, 0, regex, 0, noMatch);
+    }
+    // dfs判断子序列是否匹配
+    private boolean dfs(String str, int p1, String regex, int p2, boolean[][] noMatch) {
+        // str或regex遍历完成结束递归
+        if (p1 == str.length() || p2 == regex.length()) {
+            // 均遍历完成，匹配
+            if (p1 == str.length() && p2 == regex.length()) {
+                return true;
+            }
+            // str遍历未完成，不匹配
+            if (p1 != str.length()) {
+                return false;
+            }
+            // regex遍历未完成，需判断
+            // p2 != regex.length()
+            while (p2 != regex.length()) {
+                if (regex.charAt(p2) == '*') {
+                    p2++;
+                } else {
+                    if (p2 != regex.length() - 1 && regex.charAt(p2 + 1) == '*') {
+                        p2 += 2;
+                    } else {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        // 广义相同
+        if (str.charAt(p1) == regex.charAt(p2) || regex.charAt(p2) == '.') {
+            // regex下一个为'*"
+            if (p2 != regex.length() - 1 && regex.charAt(p2 + 1) == '*') {
+                // 忽略regex当前值、匹配regex当前值
+                if ((!noMatch[p1][p2 + 2] && dfs(str, p1, regex, p2 + 2, noMatch))
+                        || (!noMatch[p1 + 1][p2] && dfs(str, p1 + 1, regex, p2, noMatch))) {
+                    return true;
+                }
+            } else { // regex下一个不为'*"
+                // regex和str均移动一步
+                if (!noMatch[p1 + 1][p2 + 1] && dfs(str, p1 + 1, regex, p2 + 1, noMatch)) {
+                    return true;
+                }
+            }
+        }
+        // 广义不同
+        // regex下一个为'*",则可忽略这次的不同，regex移动两步
+        if (p2 != regex.length() - 1 && regex.charAt(p2 + 1) == '*'
+                && !noMatch[p1][p2 + 2] && dfs(str, p1, regex, p2 + 2, noMatch)) {
+            return true;
+        } else {
+            noMatch[p1][p2] = true;
+            return false;
+        }
+    }
+    // dp
+    public boolean isMatchDP(String str, String regex) {
+        if (str == null || regex == null) {
+            return false;
+        }
+
+        // 记录已知结果。dp[i][j]表示str的前i个和regex的前j个是否匹配。注意下标。
+        boolean[][] dp = new boolean[str.length() + 1][regex.length() + 1];
+        // d[i][0](i > 0)都为false
+        dp[0][0] = true;
+
+        // 确定str的每个子序列是否匹配regex的每个子序列。注意str为空字符串且regex不为空字符串。
+        for (int i = 0; i <= str.length(); i++) {
+            for (int j = 1; j <= regex.length(); j++) {
+                // 当前值相等
+                if (i > 0 && (regex.charAt(j - 1) == '.' || str.charAt(i - 1) == regex.charAt(j - 1))) {
+                    dp[i][j] = dp[i - 1][j - 1];
+                } else { // 当前值不等
+                    // regex当前值为*
+                    if (regex.charAt(j - 1) == '*') {
+                        // 1.忽略
+                        if (j >= 2) {
+                            dp[i][j] |= dp[i][j - 2];
+                        }
+                        // 2.匹配
+                        if (i > 0 && j >= 2 && (str.charAt(i - 1) == regex.charAt(j - 2) || regex.charAt(j - 2) == '.')) {
+                            dp[i][j] |= dp[i - 1][j];
+                        }
+
+                    } // else false
+                }
+            }
+        }
+
+        return dp[str.length()][regex.length()];
+    }
+
 }
