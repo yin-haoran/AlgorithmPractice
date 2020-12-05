@@ -814,4 +814,31 @@ public class Main {
         return p2;
     }
 
+    /**
+     * 反转链表
+     */
+    public ListNode reverseList(ListNode head) {
+        if (head == null) {
+            return null;
+        }
+
+        // 反转后的链表头结点
+        ListNode result = null;
+        // 当前反转结点
+        ListNode current = head;
+        // 暂存当前反转结点的下一个结点
+        ListNode next;
+        while (current != null) {
+            next = current.next;
+
+            // 反转
+            current.next = result;
+
+            result = current;
+            current = next;
+        }
+
+        return result;
+    }
+
 }
