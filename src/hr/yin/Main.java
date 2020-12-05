@@ -750,4 +750,38 @@ public class Main {
         return dp[str.length()][regex.length()];
     }
 
+    /**
+     * 数组中使奇数位于偶数前面
+     * <br>类似于快速排序算法
+     */
+    public int[] exchange(int[] nums) {
+        if (nums == null) {
+            return null;
+        }
+
+        // 从头往后遍历数组找偶数
+        int start = 0;
+        // 从尾往前遍历数组找奇数
+        int end = nums.length - 1;
+        // 不可能相等
+        while (start < end) {
+            // start为奇数则继续往后查找
+            while (start < nums.length && (nums[start] & 1) == 1) {
+                start++;
+            }
+            // end为偶数则继续往前查找
+            while (end >= 0 && (nums[end] & 1) == 0) {
+                end--;
+            }
+
+            if (start < end) {
+                int tmp = nums[start];
+                nums[start] = nums[end];
+                nums[end] = tmp;
+            }
+        }
+
+        return nums;
+    }
+
 }
