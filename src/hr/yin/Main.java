@@ -784,4 +784,34 @@ public class Main {
         return nums;
     }
 
+    /**
+     * 链表中倒数第k个节点
+     */
+    public ListNode getKthFromEnd(ListNode head, int k) {
+        if (head == null || k <= 0) {
+            return null;
+        }
+
+        // 先走k-1步的对象引用
+        ListNode p1 = head;
+        // 待返回结果的对象引用
+        ListNode p2 = head;
+
+        for (int i = 0; i < k - 1; i++) {
+            // 链表长度小于k
+            if (p1 == null) {
+                return null;
+            }
+            p1 = p1.next;
+        }
+
+        // p1走到最后个结点结束
+        while (p1.next != null) {
+            p1 = p1.next;
+            p2 = p2.next;
+        }
+
+        return p2;
+    }
+
 }
