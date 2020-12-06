@@ -88,6 +88,11 @@ public class Main {
         ListNode(int x) {
             val = x;
         }
+
+        ListNode(int x, ListNode next) {
+            val = x;
+            this.next = next;
+        }
     }
 
     /**
@@ -839,6 +844,39 @@ public class Main {
         }
 
         return result;
+    }
+
+    /**
+     * 合并两个有序链表
+     * 1 3 5
+     * 2 4 6
+     */
+    public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+        // 合并后链表的头结点
+        ListNode headNode = new ListNode(0, null);
+        // 当前已合并完成链表的节点
+        ListNode current = headNode;
+
+        // l1 l2分别记录两个链表当前待比较节点
+        while (l1 != null && l2 != null) {
+            if (l1.val <= l2.val) {
+                current.next = l1;
+                l1 = l1.next;
+            } else {
+                current.next = l2;
+                l2 = l2.next;
+            }
+            current = current.next;
+        }
+
+        if (l1 != null) {
+            current.next = l1;
+        }
+        if (l2 != null) {
+            current.next = l2;
+        }
+
+        return headNode.next;
     }
 
 }
