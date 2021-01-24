@@ -879,4 +879,40 @@ public class Main {
         return headNode.next;
     }
 
+    /**
+     * 子树问题
+     *
+     * <br> 树相关的问题 -> 递归、迭代
+     * <br> 树的遍历(先序、中序、后序、层次) -> 递归、迭代。   注：递归的先序比迭代的层次快非常多。
+     */
+    public boolean isSubStructure(TreeNode A, TreeNode B) {
+        // 约定空树不是任意一个树的子结构
+        if (B == null) {
+            return false;
+        }
+
+        // 父结构为空
+        if (A == null) {
+            return false;
+        }
+
+        // 递归先序遍历父结构
+        return sub(A, B) || isSubStructure(A.left, B) || isSubStructure(A.right, B);
+    }
+    /**
+     * 判断是不是子树
+     */
+    public boolean sub(TreeNode tree, TreeNode subTree) {
+        // 子树节点比较完成，再没节点了
+        if (subTree == null) {
+            return true;
+        }
+
+        if (tree == null) {
+            return false;
+        }
+
+        return tree.val == subTree.val && sub(tree.left, subTree.left) && sub(tree.right, subTree.right);
+    }
+
 }
