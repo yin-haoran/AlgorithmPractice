@@ -915,4 +915,27 @@ public class Main {
         return tree.val == subTree.val && sub(tree.left, subTree.left) && sub(tree.right, subTree.right);
     }
 
+    /**
+     * 二叉树的镜像
+     */
+    public TreeNode mirrorTree(TreeNode root) {
+        return exchangeChildren(root);
+    }
+    /**
+     * 交换节点的两个子节点
+     */
+    private TreeNode exchangeChildren(TreeNode node) {
+        if (node == null) {
+            return null;
+        }
+        if (node.left == null && node.right == null) {
+            return node;
+        }
+
+        TreeNode rightChild = node.right;
+        node.right = exchangeChildren(node.left);
+        node.left = exchangeChildren(rightChild);
+        return node;
+    }
+
 }
