@@ -938,4 +938,28 @@ public class Main {
         return node;
     }
 
+    /**
+     * 对称的二叉树
+     */
+    public boolean isSymmetric(TreeNode root) {
+        if (root == null) {
+            return true;
+        }
+
+        return isChildrenSymmetric(root.left, root.right);
+    }
+    private boolean isChildrenSymmetric(TreeNode child1, TreeNode child2) {
+        if (child1 == null && child2 == null) {
+            return true;
+        }
+        if (child1 == null || child2 == null) {
+            return false;
+        }
+
+        return child1.val == child2.val
+                && isChildrenSymmetric(child1.left, child2.right)
+                && isChildrenSymmetric(child1.right, child2.left);
+
+    }
+
 }
