@@ -962,4 +962,130 @@ public class Main {
 
     }
 
+    /**
+     * 顺时针打印矩阵
+     */
+    public int[] spiralOrder(int[][] matrix) {
+        if (matrix == null || matrix.length == 0
+                || matrix[0] == null || matrix[0].length == 0) {
+            return new int[0];
+        }
+
+        // 四个方向的边界，可以取
+        int left = 0, right = matrix[0].length -1, top = 0, bottom = matrix.length - 1;
+
+        // 遍历结果数组
+        int[] result = new int[(right + 1) * (bottom + 1)];
+        int n = 0;
+
+        while(true) {
+            // 右
+            for (int i = left; i <= right; i++) {
+                result[n++] = matrix[top][i];
+            }
+            // 上边界遍历完
+            if (++top > bottom) {
+                break;
+            }
+
+            // 下
+            for (int i = top; i <= bottom; i++) {
+                result[n++] = matrix[i][right];
+            }
+            // 右边界遍历完
+            if (--right < left) {
+                break;
+            }
+
+            // 左
+            for (int i = right; i >= left; i--) {
+                result[n++] = matrix[bottom][i];
+            }
+            // 下边界遍历完
+            if (--bottom < top) {
+                break;
+            }
+
+            // 上
+            for (int i = bottom; i >= top; i--) {
+                result[n++] = matrix[i][left];
+            }
+            // 左边界遍历完
+            if (++left > right) {
+                break;
+            }
+        }
+
+        return result;
+    }
+    /**
+     * 这是不好的方式，上面的方式做了如下改进
+     *
+     * 改进1(空间复杂度)：不用visited数组，改用四个边界值。
+     * 改进2(虽然时间复杂度一样，但基本语句更花时间)：不用每次判断方向，一次遍历完一个方向的值。
+     */
+    public int[] spiralOrder2(int[][] matrix) {
+        if (matrix == null || matrix.length == 0) {
+            return new int[0];
+        }
+
+        // 总的行列数
+        int row = matrix.length;
+        int col = matrix[0].length;
+
+        // 标记是否访问过该点
+        boolean[][] visited = new boolean[row][col];
+
+        // 遍历结果数组
+        int[] result = new int[row * col];
+        // 当前移动方向，0 1 2 3 右 下 左 上
+        int direction = 0;
+        // 当前行列值
+        int i = 0;
+        int j = -1;
+        for (int n = 0; n < result.length; n++) {
+            switch (direction) {
+                case 0:
+                    // 可以继续往该方向遍历
+                    if (j + 1 < col && !visited[i][j + 1]) {
+                        result[n] = matrix[i][++j];
+                        visited[i][j] = true;
+                        break;
+                    }
+                    // 此方向已遍历完成，换个方向
+                    direction = 1;
+                case 1:
+                    // 可以继续往该方向遍历
+                    if (i + 1 < row && !visited[i + 1][j]) {
+                        result[n] = matrix[++i][j];
+                        visited[i][j] = true;
+                        break;
+                    }
+                    // 此方向已遍历完成，换个方向
+                    direction = 2;
+                case 2:
+                    // 可以继续往该方向遍历
+                    if (j - 1 >= 0 && !visited[i][j - 1]) {
+                        result[n] = matrix[i][--j];
+                        visited[i][j] = true;
+                        break;
+                    }
+                    // 此方向已遍历完成，换个方向
+                    direction = 3;
+                case 3:
+                    // 可以继续往该方向遍历
+                    if (i - 1 > 0 && !visited[i - 1][j]) {
+                        result[n] = matrix[--i][j];
+                        visited[i][j] = true;
+                        break;
+                    }
+                    // 此方向已遍历完成，换个方向
+                    direction = 0;
+                    n--;
+            }
+        }
+
+        return result;
+    }
+
 }
