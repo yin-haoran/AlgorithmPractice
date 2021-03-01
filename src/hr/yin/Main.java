@@ -1088,4 +1088,13 @@ public class Main {
         return result;
     }
 
+    /**
+     * 包含min方法的栈(时间复杂度O(1))
+     *
+     * 1. push时多存储一个当前的最小值
+     * 2. push时存储非严格降序元素
+     *
+     * 注：Integer使用equal比较，不用==
+     */
+
 }
