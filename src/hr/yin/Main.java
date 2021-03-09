@@ -1096,5 +1096,85 @@ public class Main {
      *
      * 注：Integer使用equal比较，不用==
      */
+    public void min() {}
+
+    /**
+     * 栈的压入、弹出序列
+     */
+    public boolean validateStackSequences(int[] pushed, int[] popped) {
+        if (pushed == null || popped == null || pushed.length != popped.length) {
+            return false;
+        }
+
+        // pushed待比较元素下标，i前面的都是未弹出的
+        int i = 0;
+        // popped的遍历下标
+        int j = 0;
+
+        for (int e : pushed) {
+            pushed[i] = e;
+            while (i >= 0 && pushed[i] == popped[j]) {
+                i--;
+                j++;
+            }
+            i++;
+        }
+
+        return i == 0;
+    }
+    public boolean validateStackSequences2(int[] pushed, int[] popped) {
+        if (pushed == null || popped == null || pushed.length != popped.length) {
+            return false;
+        }
+
+        Stack<Integer> stack = new Stack<>();
+        int i = 0;
+
+        for (int e : pushed) {
+            stack.push(e);
+            while (!stack.isEmpty() && stack.peek() == popped[i]) {
+                stack.pop();
+                i++;
+            }
+        }
+
+        return stack.isEmpty();
+    }
+    public boolean validateStackSequences3(int[] pushed, int[] popped) {
+        if (pushed == null || popped == null || pushed.length != popped.length) {
+            return false;
+        }
+
+        // 保存暂时不匹配的数据
+        Stack<Integer> stack = new Stack<>();
+        int pushIndex = 0, popIndex = 0;
+
+        // 取pop数组当前值
+        // 1.和push数组比较
+        // 2.和stack比较
+        // 3.执行入栈或返回false
+        while(popIndex < popped.length) {
+            if (pushIndex < pushed.length && popped[popIndex] == pushed[pushIndex]) {
+                popIndex++;
+                pushIndex++;
+                continue;
+            }
+
+            if (!stack.isEmpty() && popped[popIndex] == stack.peek()) {
+                stack.pop();
+                popIndex++;
+                continue;
+            }
+
+            if (pushIndex < pushed.length) {
+                stack.push(pushed[pushIndex]);
+                pushIndex++;
+            } else {
+                return false;
+            }
+        }
+
+        return stack.isEmpty();
+    }
 
 }
