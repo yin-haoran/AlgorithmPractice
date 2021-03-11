@@ -1177,4 +1177,35 @@ public class Main {
         return stack.isEmpty();
     }
 
+    /**
+     * 二叉树层次遍历
+     */
+    public int[] levelOrder(TreeNode root) {
+        if (root == null) {
+            return new int[0];
+        }
+
+        Queue<TreeNode> queue = new LinkedList<>();
+        List<Integer> levelSeq = new ArrayList<>();
+        queue.offer(root);
+
+        while (!queue.isEmpty()) {
+            TreeNode node = queue.poll();
+            levelSeq.add(node.val);
+            if (node.left != null) {
+                queue.offer(node.left);
+            }
+            if (node.right != null) {
+                queue.offer(node.right);
+            }
+        }
+
+        int size = levelSeq.size();
+        int[] result = new int[size];
+        for (int i = 0; i < size; i++) {
+            result[i] = levelSeq.get(i);
+        }
+        return result;
+    }
+
 }
