@@ -1208,4 +1208,35 @@ public class Main {
         return result;
     }
 
+    /**
+     * 二叉树层次遍历。按层存储。
+     */
+    public List<List<Integer>> levelOrder2(TreeNode root) {
+        if (root == null) {
+            return new ArrayList<>();
+        }
+
+        Queue<TreeNode> queue = new LinkedList<>();
+        List<List<Integer>> result = new ArrayList<>();
+        List<Integer> levelSequence = new ArrayList<>();
+        queue.offer(root);
+
+        while (!queue.isEmpty()) {
+            for (int i = queue.size(); i > 0; i--) {
+                TreeNode node = queue.poll();
+                levelSequence.add(node.val);
+                if (node.left != null) {
+                    queue.offer(node.left);
+                }
+                if (node.right != null) {
+                    queue.offer(node.right);
+                }
+            }
+
+            result.add(levelSequence);
+            levelSequence = new ArrayList<>();
+        }
+
+        return result;
+    }
 }
