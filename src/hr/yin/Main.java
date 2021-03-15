@@ -1239,4 +1239,95 @@ public class Main {
 
         return result;
     }
+
+    /**
+     * 二叉树的层次遍历。之形。
+     *
+     * 1. 改变遍历结果：1）链表头插尾插、2）顺序表倒序
+     * 2. 改变遍历顺序：双端队列(两端都可增删、有队列和栈的性质)
+     */
+    public List<List<Integer>> levelOrder3(TreeNode root) {
+        if (root == null) {
+            return new ArrayList<>();
+        }
+
+        Queue<TreeNode> queue = new LinkedList<>();
+        List<List<Integer>> result = new ArrayList<>();
+        LinkedList<Integer> levelSequence = new LinkedList<>();
+        queue.offer(root);
+
+        while (!queue.isEmpty()) {
+            for (int i = queue.size(); i > 0; i--) {
+                TreeNode node = queue.poll();
+
+                if ((result.size() & 1) == 0) {
+                    levelSequence.addLast(node.val);
+                } else {
+                    levelSequence.addFirst(node.val);
+                }
+
+                if (node.left != null) {
+                    queue.offer(node.left);
+                }
+                if (node.right != null) {
+                    queue.offer(node.right);
+                }
+            }
+
+            result.add(levelSequence);
+            levelSequence = new LinkedList<>();
+        }
+
+        return result;
+    }
+    public List<List<Integer>> levelOrder32(TreeNode root) {
+        if (root == null) {
+            return new ArrayList<>();
+        }
+
+        // 栈形式存储右向遍历节点
+        Deque<TreeNode> rightDeque = new LinkedList<>();
+        Deque<TreeNode> leftDeque = new LinkedList<>();
+        // 是否正在右向遍历
+        boolean traverseRight = true;
+        // 一层的遍历序列
+        List<Integer> levelSequence = new ArrayList<>();
+        // 遍历结果
+        List<List<Integer>> result = new ArrayList<>();
+        rightDeque.push(root);
+
+        while (!rightDeque.isEmpty() || !leftDeque.isEmpty()) {
+            if (traverseRight) {
+                while (!rightDeque.isEmpty()) {
+                    TreeNode node = rightDeque.pop();
+                    levelSequence.add(node.val);
+                    if (node.left != null) {
+                        leftDeque.push(node.left);
+                    }
+                    if (node.right != null) {
+                        leftDeque.push(node.right);
+                    }
+                }
+                traverseRight = false;
+            } else {
+                while (!leftDeque.isEmpty()) {
+                    TreeNode node = leftDeque.pop();
+                    levelSequence.add(node.val);
+                    if (node.right != null) {
+                        rightDeque.push(node.right);
+                    }
+                    if (node.left != null) {
+                        rightDeque.push(node.left);
+                    }
+                }
+                traverseRight = true;
+            }
+
+            result.add(levelSequence);
+            levelSequence = new ArrayList<>();
+        }
+
+        return result;
+    }
+
 }
