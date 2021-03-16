@@ -1330,4 +1330,39 @@ public class Main {
         return result;
     }
 
+    /**
+     * 二叉搜索树的后序遍历序列
+     */
+    public boolean verifyPostorder(int[] postorder) {
+        if (postorder == null) {
+            return false;
+        }
+
+        return isBinarySortTree(postorder, 0, postorder.length - 1);
+    }
+    private boolean isBinarySortTree(int[] postorder, int start, int end) {
+        // 两个元素也无需比较
+        if (end <= start) {
+            return true;
+        }
+
+        int rootValue = postorder[end];
+
+        // 找第一个大于rootValue的值对应坐标
+        int rightStartIndex = start;
+        while (rightStartIndex < end && postorder[rightStartIndex] < rootValue) {
+            rightStartIndex++;
+        }
+
+        // 确保rightStartIndex后面的值都大于rootValue
+        for (int i = rightStartIndex + 1; i < end; i++) {
+            if (postorder[i] < rootValue) {
+                return false;
+            }
+        }
+
+        return isBinarySortTree(postorder, start, rightStartIndex - 1)
+                && isBinarySortTree(postorder, rightStartIndex, end - 1);
+    }
+
 }
