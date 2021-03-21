@@ -1365,4 +1365,84 @@ public class Main {
                 && isBinarySortTree(postorder, rightStartIndex, end - 1);
     }
 
+    /**
+     * 复杂链表的复制
+     *
+     * 遍历两次链表，用一个HashMap
+     */
+    public Node copyRandomList1(Node head) {
+        if (head == null) {
+            return null;
+        }
+
+        Node current = head;
+        Map<Node, Node> map = new HashMap<>();
+
+        while (current != null) {
+            map.put(current, new Node(current.val));
+            current = current.next;
+        }
+
+        current = head;
+        while (current != null) {
+            map.get(current).next = map.get(current.next);
+            map.get(current).random = map.get(current.random);
+            current = current.next;
+        }
+
+        return map.get(head);
+    }
+
+    /**
+     * 遍历三次链表
+     */
+    public Node copyRandomList2(Node head) {
+        if (head == null) {
+            return null;
+        }
+
+        // 1.构建穿插链表
+        Node current = head;
+        while (current != null) {
+            Node newNode = new Node(current.val);
+            newNode.next = current.next;
+            current.next = newNode;
+            current = newNode.next;
+        }
+
+        // 2.给新节点的random赋值
+        current = head;
+        while (current != null) {
+            if (current.random != null) {
+                current.next.random = current.random.next;
+            }
+            current = current.next.next;
+        }
+
+        // 3.拆分穿插链表
+        current = head;
+        Node copiedHead = current.next;
+        Node copiedCurrent = copiedHead;
+        while (copiedCurrent.next != null) {
+            current.next = current.next.next;
+            copiedCurrent.next = copiedCurrent.next.next;
+            current = current.next;
+            copiedCurrent = copiedCurrent.next;
+        }
+        current.next = null;
+
+        return copiedHead;
+    }
+    private static class Node {
+        int val;
+        Node next;
+        Node random;
+
+        public Node(int val) {
+            this.val = val;
+            this.next = null;
+            this.random = null;
+        }
+    }
+
 }
