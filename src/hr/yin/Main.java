@@ -1445,4 +1445,103 @@ public class Main {
         }
     }
 
+    /**
+     * 二叉排序树2排序循环双链表
+     */
+    public TreeNode treeToDoublyList(TreeNode root) {
+        if (root == null) {
+            return null;
+        }
+
+        // 头
+        TreeNode head = root;
+        while (head.left != null) {
+            head = head.left;
+        }
+        // 尾
+        TreeNode tail = root;
+        while (tail.right != null) {
+            tail = tail.right;
+        }
+
+        changePointer(root);
+        tail.right = head;
+        head.left = tail;
+
+        return head;
+    }
+    /**
+     * 改变node节点的相关指针(4个)
+     */
+    private void changePointer(TreeNode node) {
+        if (node == null) {
+            return;
+        }
+
+        if (node.left != null) {
+            // 左子树的最大值节点
+            TreeNode leftMaxNode = node.left;
+            while (leftMaxNode.right != null) {
+                leftMaxNode = leftMaxNode.right;
+            }
+
+            changePointer(node.left);
+            node.left = leftMaxNode;
+            leftMaxNode.right = node;
+        }
+
+        if (node.right != null) {
+            // 右子树的最小值节点
+            TreeNode rightMinNode = node.right;
+            while (rightMinNode.left != null) {
+                rightMinNode = rightMinNode.left;
+            }
+
+            changePointer(node.right);
+            node.right = rightMinNode;
+            rightMinNode.left = node;
+        }
+    }
+
+    /**
+     * 二叉排序树2排序循环双链表
+     *
+     * 二叉排序树的中序遍历是递增序列
+     */
+    public TreeNode treeToDoublyList2(TreeNode root) {
+        if (root == null) {
+            return null;
+        }
+
+        inorderTraverse(root);
+        head.left = current;
+        current.right = head;
+
+        return head;
+    }
+    /**
+     * 中序遍历当前已排序好的最新节点
+     */
+    private TreeNode current;
+    private TreeNode head;
+    /**
+     * 中序遍历
+     */
+    private void inorderTraverse(TreeNode node) {
+        if (node == null) {
+            return;
+        }
+
+        inorderTraverse(node.left);
+        // 对于第一个节点，不做任何处理
+        if (current == null) {
+            head = node;
+        } else {
+            current.right = node;
+            node.left = current;
+        }
+        current = node;
+        inorderTraverse(node.right);
+    }
+
 }
