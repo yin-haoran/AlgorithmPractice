@@ -1544,4 +1544,74 @@ public class Main {
         inorderTraverse(node.right);
     }
 
+    /**
+     * 序列化二叉树。
+     * 层次遍历。需要存储叶子节点的左右null。
+     */
+    public String serialize(TreeNode root) {
+        if (root == null) {
+            return "[]";
+        }
+
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+        StringBuilder treeString = new StringBuilder("[");
+
+        while (!queue.isEmpty()) {
+            TreeNode node = queue.poll();
+            if (node == null) {
+                treeString.append("null,");
+            } else {
+                treeString.append(node.val).append(",");
+                queue.offer(node.left);
+                queue.offer(node.right);
+            }
+        }
+
+        // 删除多余,
+        treeString.deleteCharAt(treeString.length() - 1);
+        treeString.append("]");
+
+        return treeString.toString();
+    }
+    /**
+     * 反序列化
+     */
+    public TreeNode deserialize(String data) {
+        if ("[]".equals(data)) {
+            return null;
+        }
+
+        // 先取有用部分再分割
+        String[] valStrArr = data.substring(1, data.length() - 1).split(",");
+
+        // 根节点
+        TreeNode root = new TreeNode(Integer.parseInt(valStrArr[0]));
+        // 存储已经生成的节点
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+        // 当前遍历到的位置
+        int currentIndex = 1;
+
+        while (!queue.isEmpty()) {
+            TreeNode node = queue.poll();
+
+            // 左孩子
+            if (!"null".equals(valStrArr[currentIndex])) {
+                node.left = new TreeNode(Integer.parseInt(valStrArr[currentIndex]));
+                queue.offer(node.left);
+            }
+            currentIndex++;
+
+            // 右孩子
+            if (!"null".equals(valStrArr[currentIndex])) {
+                node.right = new TreeNode(Integer.parseInt(valStrArr[currentIndex]));
+                queue.offer(node.right);
+            }
+            currentIndex++;
+        }
+
+        return root;
+    }
+
 }
