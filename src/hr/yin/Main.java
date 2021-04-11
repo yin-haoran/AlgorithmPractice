@@ -1614,4 +1614,38 @@ public class Main {
         return root;
     }
 
+    /**
+     * 二叉树中和为某一值的路径
+     *
+     * 先序遍历+回溯
+     * 树节点值可能为负，不能剪枝
+     */
+    public List<List<Integer>> pathSum(TreeNode root, int target) {
+        List<List<Integer>> result = new ArrayList<>();
+        pathSumRecursively(root, target, new ArrayList<>(), result);
+
+        return result;
+    }
+    private void pathSumRecursively(TreeNode node, int target, List<Integer> currentPath, List<List<Integer>> result) {
+        if (node == null) {
+            return;
+        }
+
+        currentPath.add(node.val);
+        target -= node.val;
+
+        // 达到叶子节点
+        if (node.left == null && node.right == null) {
+            if (target == 0) {
+                result.add(new ArrayList<>(currentPath));
+            }
+        } else {
+            pathSumRecursively(node.left, target, currentPath, result);
+            pathSumRecursively(node.right, target, currentPath, result);
+        }
+
+        // 回溯
+        currentPath.remove(currentPath.size() - 1);
+    }
+
 }
