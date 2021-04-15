@@ -1648,4 +1648,58 @@ public class Main {
         currentPath.remove(currentPath.size() - 1);
     }
 
+    /**
+     * 字符串的排列。结果不重复且不关心顺序。
+     *
+     * DFS 回溯 剪枝
+     */
+    public String[] permutation(String s) {
+        if (s == null || s.length() == 0) {
+            return new String[0];
+        }
+
+        List<String> result = new ArrayList<>();
+
+        permutationDFS(result, s.toCharArray(), 0);
+
+        return result.toArray(new String[0]);
+    }
+    /**
+     * 使用深度优先搜索的排列
+     * @param result 结果列表
+     * @param charArr 排列的数据
+     * @param currentIndex 待确定值的位置
+     */
+    private void permutationDFS(List<String> result, char[] charArr, int currentIndex) {
+        // 待确定的位置为最后位时递归结束
+        if (currentIndex == charArr.length - 1) {
+            result.add(String.valueOf(charArr));
+            return;
+        }
+
+        char swapChar = charArr[currentIndex];
+        // 待确定值的位置遍历确定其值
+        for (int i = currentIndex; i < charArr.length; i++) {
+            // 剪枝。待确定的位置，其值不重复
+            int k = currentIndex;
+            for ( ; k < i; k++) {
+                if (charArr[i] == charArr[k]) {
+                    break;
+                }
+            }
+            if (k < i) {
+                continue;
+            }
+
+            charArr[currentIndex] = charArr[i];
+            charArr[i] = swapChar;
+
+            permutationDFS(result, charArr, currentIndex + 1);
+
+            // 回溯
+            charArr[i] = charArr[currentIndex];
+            charArr[currentIndex] = swapChar;
+        }
+    }
+
 }
