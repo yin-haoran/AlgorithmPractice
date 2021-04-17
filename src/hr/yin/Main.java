@@ -1702,4 +1702,36 @@ public class Main {
         }
     }
 
+    /**
+     * 数组中出现次数超过一半的数字
+     *
+     * 1. 时间O(n^2) ---> 遍历数组再遍历当前位置之后元素去确定当前元素是否为要求的值 or 排序后取中间值
+     * 2. 时间O(n) ---> 遍历并将出现次数存入hashmap并判断是否超过一半
+     * 3. 时间O(n)、空间O(1) ---> 摩尔投票
+     */
+    public int majorityElement(int[] nums) {
+        if (nums == null || nums.length == 0) {
+            return Integer.MAX_VALUE;
+        }
+
+        int count = 0;
+        int numOverHalf = Integer.MAX_VALUE;
+        for (int num : nums) {
+            if (count == 0) {
+                numOverHalf = num;
+            }
+
+            count += numOverHalf == num ? 1 : -1;
+        }
+
+        count = 0;
+        for(int num : nums) {
+            if (num == numOverHalf) {
+                count++;
+            }
+        }
+
+        return count > nums.length / 2 ? numOverHalf : Integer.MAX_VALUE;
+    }
+
 }
