@@ -1734,4 +1734,70 @@ public class Main {
         return count > nums.length / 2 ? numOverHalf : Integer.MAX_VALUE;
     }
 
+    /**
+     * 最小的k个数
+     *
+     * 1. 排序后取值。
+     * 2. 遍历存放在大顶堆(优先队列)。 nlogk
+     * 3. 快速排序思想。每次确定一个值在正确位置，且左边值更小右边值更大。 n+n/2+n/4+...   n->n2。
+     * 2和3的比较：破坏数组、数据数量固定且有限。
+     *
+     * for (int i = 0; i < length; i++) {
+     *     if (i < k) {
+     *
+     *     } else {
+     *
+     *     }
+     * }
+     * --->
+     * for (int i = 0; i < k; i++) {}
+     * for (int i = k; i < length; i++) {}
+     *
+     * 64匹马，8个赛道，找最快的4匹马要比赛多少次：最少10到11次。
+     */
+    public int[] getLeastNumbers(int[] arr, int k) {
+        if (arr == null || arr.length == 0 || k <= 0 || k > arr.length) {
+            return new int[0];
+        }
+
+        findLeastNumbers(arr, 0, arr.length - 1, k);
+
+        return Arrays.copyOfRange(arr, 0, k);
+    }
+    private void findLeastNumbers(int[] arr, int startIndex, int endIndex, int n) {
+        int i = startIndex + 1;
+        int j = endIndex;
+        int pivot = arr[startIndex];
+        while (i <= j) {
+            while (i <= endIndex && arr[i] < pivot) {
+                i++;
+            }
+            while (j >= startIndex && arr[j] > pivot) {
+                j--;
+            }
+
+            if (i > j)  {
+                break;
+            }
+            int tmp = arr[i];
+            arr[i] = arr[j];
+            arr[j] = tmp;
+            i++;
+            j--;
+        }
+
+        int tmp = arr[j];
+        arr[j] = pivot;
+        arr[startIndex] = tmp;
+
+        if (j == n || j == n - 1) {
+            return;
+        }
+        if (j < n - 1) {
+            findLeastNumbers(arr, j + 1, endIndex, n);
+        } else if (j > n) {
+            findLeastNumbers(arr, startIndex, j - 1, n);
+        }
+    }
+
 }
