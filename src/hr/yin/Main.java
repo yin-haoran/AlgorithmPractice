@@ -1800,4 +1800,151 @@ public class Main {
         }
     }
 
+    /**
+     * 数据流的中位数
+     * 排序：nlogn
+     * 保持有序：n -> 二分查找、插入
+     * 堆：logn
+     *
+     * 数组 链表 栈 队列 树 堆(优先队列-完全二叉树) 图 hash表
+     *
+     * 二叉排序树 删除：0/1/2个孩子 修改一个引用
+     */
+
+    private final PriorityQueue<Integer> heapMaxValue = new PriorityQueue<>((i1, i2) -> i2 - i1);
+    private final PriorityQueue<Integer> heapMinValue = new PriorityQueue<>();
+
+    public void addNum(int num) {
+        if (heapMaxValue.size() == heapMinValue.size()) {
+            if (heapMinValue.size() == 0 || num <= heapMinValue.peek()) {
+                heapMaxValue.offer(num);
+            } else {
+                heapMinValue.offer(num);
+                heapMaxValue.offer(heapMinValue.poll());
+            }
+        } else {
+            heapMaxValue.offer(num);
+            heapMinValue.offer(heapMaxValue.poll());
+        }
+    }
+
+    public double findMedian() {
+        if (heapMaxValue.size() == 0) {
+            return Double.MAX_VALUE;
+        }
+
+        if (heapMaxValue.size() > heapMinValue.size()) {
+            return heapMaxValue.peek();
+        }
+
+        return (heapMaxValue.peek() + heapMinValue.peek()) / 2.0;
+    }
+
+    // 二叉排序树 且维持左右子树节点数相等或差1
+    private TreeNode root;
+    private int leftChildCount = 0;
+    private int rightChildCount = 0;
+
+    public void addNum2(int num) {
+        if (root == null) {
+            root = new TreeNode(num);
+            return;
+        }
+
+        // 在树中插入该值
+        TreeNode node = root;
+        while (true) {
+            // 等于的值统一放在右孩子
+            if (num >= node.val) {
+                if (node.right == null) {
+                    node.right = new TreeNode(num);
+                    break;
+                } else {
+                    node = node.right;
+                }
+            } else {
+                if (node.left == null) {
+                    node.left = new TreeNode(num);
+                    break;
+                } else {
+                    node = node.left;
+                }
+            }
+        }
+
+        // 判断这次的数放在哪个孩子
+        if (num >= root.val) {
+            rightChildCount++;
+        } else {
+            leftChildCount++;
+        }
+
+        // 孩子树的节点数最多差1
+        if (Math.abs(rightChildCount - leftChildCount) <= 1) {
+            return;
+        }
+        // 旋转树。右 左
+        if (rightChildCount > leftChildCount) {
+            TreeNode parent = root.right;
+            TreeNode child = root.right;
+            while (child.left != null) {
+                parent = child;
+                child = parent.left;
+            }
+
+            // 注意1
+            if (child != parent) {
+                // 最值节点的子树给父节点的
+                parent.left = child.right;
+                // 最值节点的子树为根和根的子树
+                child.right = root.right;
+            }
+            child.left = root;
+            // 根只有一个子树了
+            root.right = null;
+
+            // 注意2
+            root = child;
+            rightChildCount--;
+            leftChildCount++;
+        } else {
+            TreeNode parent = root.left;
+            TreeNode child = root.left;
+            while (child.right != null) {
+                parent = child;
+                child = parent.right;
+            }
+
+            if (child != parent) {
+                parent.right = child.left;
+                child.left = root.left;
+            }
+            child.right = root;
+            root.left = null;
+
+            root = child;
+            leftChildCount--;
+            rightChildCount++;
+        }
+    }
+
+    public double findMedian2() {
+        if (rightChildCount == leftChildCount) {
+            return root.val;
+        }
+
+        if (rightChildCount > leftChildCount) {
+            TreeNode minNodeInRight = root.right;
+            while (minNodeInRight.left != null) {
+                minNodeInRight = minNodeInRight.left;
+            }
+            return (root.val + minNodeInRight.val) / 2.0;
+        }
+
+        TreeNode maxNodeInLeft = root.left;
+        while (maxNodeInLeft.right != null) {
+            maxNodeInLeft = maxNodeInLeft.right;
+        }
+        return (root.val + maxNodeInLeft.val) / 2.0;
+    }
 }
