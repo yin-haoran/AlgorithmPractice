@@ -1947,4 +1947,44 @@ public class Main {
         }
         return (root.val + maxNodeInLeft.val) / 2.0;
     }
+
+    /**
+     * 连续子数组的最大和
+     *
+     * dp:使用原数组可降低空间复杂度、使用一个变量可降低时间复杂度
+     */
+    public int maxSubArray(int[] nums) {
+        if (nums == null || nums.length == 0) {
+            return Integer.MIN_VALUE;
+        }
+
+        int[] maxSum = new int[nums.length];
+        maxSum[0] = nums[0];
+
+        int maxSubValue = maxSum[0];
+
+        for (int i = 1; i < nums.length; i++) {
+            maxSum[i] = Math.max(maxSum[i - 1] + nums[i], nums[i]);
+            maxSubValue = Math.max(maxSubValue, maxSum[i]);
+        }
+
+        return maxSubValue;
+    }
+    public int maxSubArray2(int[] nums) {
+        if (nums == null || nums.length == 0) {
+            return Integer.MIN_VALUE;
+        }
+
+       int preMax = nums[0];
+
+        int maxSubValue = preMax;
+
+        for (int i = 1; i < nums.length; i++) {
+            preMax = Math.max(preMax + nums[i], nums[i]);
+            maxSubValue = Math.max(maxSubValue, preMax);
+        }
+
+        return maxSubValue;
+    }
+
 }
