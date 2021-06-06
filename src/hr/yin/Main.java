@@ -1987,4 +1987,42 @@ public class Main {
         return maxSubValue;
     }
 
+    /**
+     * 1~n整数中1出现的次数
+     *
+     * 时间复杂度 O(log n)。循环次数为数字n的位数，即log10 n。
+     */
+    public int countDigitOne(int n) {
+        if (n < 1) {
+            return 0;
+        }
+
+        // 高位、低位、当前位的数字
+        int high = n / 10;
+        int low = 0;
+        int current = n % 10;
+        // 当前位
+        int digit = 1;
+
+        int count = 0;
+
+        while (high != 0 || current != 0) {
+            if (current == 0) {
+                count += high * digit;
+            } else if (current == 1) {
+                count += high * digit + low + 1;
+            } else {
+                count += (high + 1) * digit;
+            }
+
+            low += current * digit;
+            current = high % 10;
+            high /=  10;
+            // 乘10，可能越界，注意其边界值。
+            digit *= 10;
+        }
+
+        return count;
+    }
+
 }
