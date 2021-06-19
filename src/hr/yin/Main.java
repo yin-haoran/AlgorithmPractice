@@ -2025,4 +2025,43 @@ public class Main {
         return count;
     }
 
+    /**
+     * 数字序列中某一位的数字
+     *
+     * 位数    (数值范围)      总共多少个数      总共占多少位
+     *  1       1 - 9           9                9
+     *  2       10 - 99         90              180
+     *  3       100 - 999       900            2700
+     * ......
+     *  8                       90000000      7.2*10^8
+     *  9                      900000000      8.1*10^9
+     */
+    public int findNthDigit(int n) {
+        if (n <= 0) {
+            return 0;
+        }
+
+        // 当前在多少位
+        int digit = 1;
+        // 当前位有多少数字。最多到第9位，有9*10^8。
+        int numberCount = 9;
+        // 当前位所有数字所占位数。最大能取到8.1*10^9。
+        long digitCount = digit * numberCount;
+
+        // 1. 确定位数
+        while (n > digitCount) {
+            n -= digitCount;
+            digit++;
+            numberCount *= 10;
+            // 两个int相乘可能超过int类型，先强转其中一个
+            digitCount = (long) digit * numberCount;
+        }
+
+        // 2. 确定数字
+        int number = numberCount / 9 + (n - 1) / digit;
+
+        // 3. 确定具体位
+        return String.valueOf(number).charAt((n - 1) % digit) - '0';
+    }
+
 }
