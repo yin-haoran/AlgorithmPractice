@@ -2064,4 +2064,55 @@ public class Main {
         return String.valueOf(number).charAt((n - 1) % digit) - '0';
     }
 
+    /**
+     * 把数组排成最小的数
+     *
+     * 1.排序 2.排序规则
+     * 1: Arrays.sort()   快速排序
+     * 2(最高位往低位逐位比较): s1s2.compareTo(s2s1)   s1s2和s2s1逐位比较
+     *
+     * int最大：2*10^9
+     * long最大：9*10^18
+     */
+    public String minNumber(int[] nums) {
+        if (nums == null || nums.length == 0) {
+            return "";
+        }
+
+        String[] numStrArr = new String[nums.length];
+        for (int i = 0; i < nums.length; i++) {
+            numStrArr[i] = String.valueOf(nums[i]);
+        }
+
+        Arrays.sort(numStrArr, (s1, s2) -> (s1 + s2).compareTo((s2 + s1)));
+
+        StringBuilder sb = new StringBuilder();
+        Arrays.stream(numStrArr).forEach(sb::append);
+
+        return sb.toString();
+    }
+    private int compare(int number1, int number2) {
+        if (number1 == number2) {
+            return 0;
+        }
+
+        String s1 = String.valueOf(number1);
+        String s2 = String.valueOf(number2);
+        if (s1.length() == s2.length()) {
+            return number1 - number2;
+        }
+
+        s1 = s1 + s2;
+        s2 = s2 + number1;
+        for (int i = 0; i < s1.length(); i++) {
+            if (s1.charAt(i) == s2.charAt(i)) {
+                continue;
+            }
+
+            return s1.charAt(i) - s2.charAt(i);
+        }
+
+        return 0;
+    }
+
 }
