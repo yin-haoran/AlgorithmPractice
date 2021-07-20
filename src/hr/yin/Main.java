@@ -2115,4 +2115,72 @@ public class Main {
         return 0;
     }
 
+    /**
+     * 数字翻译成字符串
+     *
+     * dp。   从前往后：f(i) = f(i - 1) + f(i - 2) / 从后往前：f(i) = f(i + 1) + f(i + 2)
+     *
+     * 对数字位的处理：   除和取余(从低位开始，省空间)   String(占空间)
+     *
+     *
+     *
+     * dfs(递归)   剪枝   回溯。   注：对这里，太多重复的计算
+     * 自上而下(发散-节点)、自下而上(收拢-路径)
+     */
+    public int translateNum(int num) {
+        if (num < 0) {
+            return 0;
+        }
+
+        // 前两位的dp值。初始值1为了倒数第二位能有正确值
+        int dpPre2 = 1;
+        // 前一位的dp值
+        int dpPre1 = 1;
+        // 前一位
+        int preDigit = num % 10;
+        // 当前位
+        int curDigit;
+        // 从倒数第二位开始
+        num /= 10;
+
+        while (num != 0) {
+            curDigit = num % 10;
+
+            int dpCur =
+                    (curDigit == 0 || curDigit * 10 + preDigit > 25)
+                    ? dpPre1
+                    : dpPre1 + dpPre2;
+
+            dpPre2 = dpPre1;
+            dpPre1 = dpCur;
+
+            preDigit = curDigit;
+            num /= 10;
+        }
+
+        return dpPre1;
+    }
+    /**
+     * 2
+     */
+    public int translateNum2(int num) {
+        return dfs(String.valueOf(num), 0, 0);
+    }
+    private int dfs(String s, int index, int count) {
+        // 最后一位数或没有了
+        if (index >= s.length() - 1) {
+            return count + 1;
+        }
+
+        // 当前位
+        count = dfs(s, index + 1, count);
+
+        // 和后面一位
+        if (s.charAt(index) == '0' || s.substring(index, index + 2).compareTo("25") > 0) {
+            return count;
+        }
+        count = dfs(s, index + 2, count);
+        return count;
+    }
+
 }
